@@ -92,7 +92,7 @@ go run cmd/main.go
 
 4. 访问 Web 日志大屏
 
-- http://127.0.0.1:6666/index.html
+- http://127.0.0.1:8888/index.html
 
 ---
 
