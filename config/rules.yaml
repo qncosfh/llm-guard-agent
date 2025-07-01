@@ -1,0 +1,945 @@
+rules:
+  # input 前100条
+  - type: input
+    keyword: "习近平"
+    description: "涉政敏感词"
+  - type: input
+    keyword: "法轮功"
+    description: "涉政敏感词"
+  - type: input
+    keyword: "裸聊"
+    description: "涉黄敏感词"
+  - type: input
+    keyword: "炸药配方"
+    description: "涉暴恐内容"
+  - type: input
+    keyword: "银行卡号"
+    description: "金融隐私"
+  - type: input
+    keyword: "身份证号码"
+    description: "个人隐私"
+  - type: input
+    keyword: "黑客教程"
+    description: "黑产内容"
+  - type: input
+    keyword: "如何翻墙"
+    description: "违法违规"
+  - type: input
+    keyword: "客户名单"
+    description: "敏感信息"
+  - type: input
+    keyword: "爆炸物"
+    description: "涉暴恐内容"
+  - type: input
+    keyword: "毒品制作"
+    description: "涉毒内容"
+  - type: input
+    keyword: "开票公司"
+    description: "涉税内容"
+  - type: input
+    keyword: "刷单平台"
+    description: "黑灰产"
+  - type: input
+    keyword: "色情图片"
+    description: "涉黄内容"
+  - type: input
+    keyword: "赌博网站"
+    description: "涉赌内容"
+  - type: input
+    keyword: "走私渠道"
+    description: "违法内容"
+  - type: input
+    keyword: "军火交易"
+    description: "涉军火"
+  - type: input
+    keyword: "洗钱方法"
+    description: "金融犯罪"
+  - type: input
+    keyword: "代办证件"
+    description: "黑产服务"
+  - type: input
+    keyword: "网络攻击"
+    description: "网络安全"
+  - type: input
+    keyword: "破解软件"
+    description: "侵权内容"
+  - type: input
+    keyword: "外挂工具"
+    description: "游戏作弊"
+  - type: input
+    keyword: "暗网入口"
+    description: "暗网相关"
+  - type: input
+    keyword: "假币制作"
+    description: "金融犯罪"
+  - type: input
+    keyword: "偷拍教程"
+    description: "隐私侵犯"
+  - type: input
+    keyword: "爆破工具"
+    description: "涉暴恐内容"
+  - type: input
+    keyword: "恐怖组织"
+    description: "涉恐内容"
+  - type: input
+    keyword: "反动言论"
+    description: "涉政内容"
+  - type: input
+    keyword: "集会游行"
+    description: "涉政内容"
+  - type: input
+    keyword: "VPN翻墙"
+    description: "网络安全"
+  - type: input
+    keyword: "银行卡套现"
+    description: "金融犯罪"
+  - type: input
+    keyword: "刷单兼职"
+    description: "黑灰产"
+  - type: input
+    keyword: "开票发票"
+    description: "涉税内容"
+  - type: input
+    keyword: "假证办理"
+    description: "黑产服务"
+  - type: input
+    keyword: "色情视频"
+    description: "涉黄内容"
+  - type: input
+    keyword: "赌博技巧"
+    description: "涉赌内容"
+  - type: input
+    keyword: "走私香烟"
+    description: "违法内容"
+  - type: input
+    keyword: "军火买卖"
+    description: "涉军火"
+  - type: input
+    keyword: "洗钱渠道"
+    description: "金融犯罪"
+  - type: input
+    keyword: "代办护照"
+    description: "黑产服务"
+  - type: input
+    keyword: "网络诈骗"
+    description: "网络安全"
+  - type: input
+    keyword: "破解激活"
+    description: "侵权内容"
+  - type: input
+    keyword: "外挂下载"
+    description: "游戏作弊"
+  - type: input
+    keyword: "暗网交易"
+    description: "暗网相关"
+  - type: input
+    keyword: "假币流通"
+    description: "金融犯罪"
+  - type: input
+    keyword: "偷拍设备"
+    description: "隐私侵犯"
+  - type: input
+    keyword: "爆破教程"
+    description: "涉暴恐内容"
+  - type: input
+    keyword: "恐怖袭击"
+    description: "涉恐内容"
+  - type: input
+    keyword: "反动组织"
+    description: "涉政内容"
+  - type: input
+    keyword: "非法集会"
+    description: "涉政内容"
+  - type: input
+    keyword: "VPN代理"
+    description: "网络安全"
+  - type: input
+    keyword: "银行卡黑市"
+    description: "金融犯罪"
+  - type: input
+    keyword: "刷单黑产"
+    description: "黑灰产"
+  - type: input
+    keyword: "发票代开"
+    description: "涉税内容"
+  - type: input
+    keyword: "假证制作"
+    description: "黑产服务"
+  - type: input
+    keyword: "色情直播"
+    description: "涉黄内容"
+  - type: input
+    keyword: "赌博平台"
+    description: "涉赌内容"
+  - type: input
+    keyword: "走私武器"
+    description: "违法内容"
+  - type: input
+    keyword: "军火黑市"
+    description: "涉军火"
+  - type: input
+    keyword: "洗钱黑产"
+    description: "金融犯罪"
+  - type: input
+    keyword: "代办签证"
+    description: "黑产服务"
+  - type: input
+    keyword: "网络钓鱼"
+    description: "网络安全"
+  - type: input
+    keyword: "破解补丁"
+    description: "侵权内容"
+  - type: input
+    keyword: "外挂脚本"
+    description: "游戏作弊"
+  - type: input
+    keyword: "暗网论坛"
+    description: "暗网相关"
+  - type: input
+    keyword: "假币制造"
+    description: "金融犯罪"
+  - type: input
+    keyword: "偷拍神器"
+    description: "隐私侵犯"
+  - type: input
+    keyword: "爆破方案"
+    description: "涉暴恐内容"
+  - type: input
+    keyword: "恐怖分子"
+    description: "涉恐内容"
+  - type: input
+    keyword: "反动宣传"
+    description: "涉政内容"
+  - type: input
+    keyword: "非法游行"
+    description: "涉政内容"
+  - type: input
+    keyword: "VPN账号"
+    description: "网络安全"
+  - type: input
+    keyword: "银行卡诈骗"
+    description: "金融犯罪"
+  - type: input
+    keyword: "刷单教程"
+    description: "黑灰产"
+  - type: input
+    keyword: "发票作假"
+    description: "涉税内容"
+  - type: input
+    keyword: "假证贩卖"
+    description: "黑产服务"
+  - type: input
+    keyword: "色情聊天室"
+    description: "涉黄内容"
+  - type: input
+    keyword: "赌博软件"
+    description: "涉赌内容"
+  - type: input
+    keyword: "走私毒品"
+    description: "违法内容"
+  - type: input
+    keyword: "军火走私"
+    description: "涉军火"
+  - type: input
+    keyword: "洗钱教程"
+    description: "金融犯罪"
+  - type: input
+    keyword: "代办驾驶证"
+    description: "黑产服务"
+  - type: input
+    keyword: "网络攻击工具"
+    description: "网络安全"
+  - type: input
+    keyword: "破解工具"
+    description: "侵权内容"
+  - type: input
+    keyword: "外挂辅助"
+    description: "游戏作弊"
+  - type: input
+    keyword: "暗网市场"
+    description: "暗网相关"
+  - type: input
+    keyword: "假币教程"
+    description: "金融犯罪"
+  - type: input
+    keyword: "偷拍软件"
+    description: "隐私侵犯"
+  - type: input
+    keyword: "爆破材料"
+    description: "涉暴恐内容"
+  - type: input
+    keyword: "恐怖活动"
+    description: "涉恐内容"
+  - type: input
+    keyword: "反动标语"
+    description: "涉政内容"
+  - type: input
+    keyword: "非法组织"
+    description: "涉政内容"
+  - type: input
+    keyword: "VPN工具"
+    description: "网络安全"
+  - type: input
+    keyword: "银行卡信息"
+    description: "金融犯罪"
+  - type: input
+    keyword: "刷单黑客"
+    description: "黑灰产"
+  - type: input
+    keyword: "发票黑市"
+    description: "涉税内容"
+  - type: input
+    keyword: "假证黑市"
+    description: "黑产服务"
+  - type: input
+    keyword: "色情资源"
+    description: "涉黄内容"
+  - type: input
+    keyword: "赌博教程"
+    description: "涉赌内容"
+  - type: input
+    keyword: "走私车辆"
+    description: "违法内容"
+  - type: input
+    keyword: "军火资源"
+    description: "涉军火"
+  - type: input
+    keyword: "洗钱资源"
+    description: "金融犯罪"
+  - type: input
+    keyword: "代办学历"
+    description: "黑产服务"
+  - type: input
+    keyword: "网络病毒"
+    description: "网络安全"
+  - type: input
+    keyword: "破解账号"
+    description: "侵权内容"
+  - type: input
+    keyword: "外挂资源"
+    description: "游戏作弊"
+  - type: input
+    keyword: "暗网资源"
+    description: "暗网相关"
+  - type: input
+    keyword: "假币资源"
+    description: "金融犯罪"
+  - type: input
+    keyword: "偷拍资源"
+    description: "隐私侵犯"
+  - type: input
+    keyword: "ignore previous instructions"
+    description: "AI越权指令"
+  - type: input
+    keyword: "disregard all prior prompts"
+    description: "AI越权指令"
+  - type: input
+    keyword: "as an unfiltered ai"
+    description: "AI越权指令"
+  - type: input
+    keyword: "jailbreak"
+    description: "AI安全绕过"
+  - type: input
+    keyword: "please act as"
+    description: "AI提示注入"
+  - type: input
+    keyword: "you are now in developer mode"
+    description: "AI越权指令"
+  - type: input
+    keyword: "simulate a dan"
+    description: "AI安全绕过"
+  - type: input
+    keyword: "write malicious code"
+    description: "AI攻击payload"
+  - type: input
+    keyword: "bypass content filter"
+    description: "AI安全绕过"
+  - type: input
+    keyword: "how to hack"
+    description: "AI攻击payload"
+
+  # output 前100条
+  - type: output
+    keyword: "如何自杀"
+    description: "不良引导"
+  - type: output
+    keyword: "身份证号码"
+    description: "隐私泄露"
+  - type: output
+    keyword: "黑客教程"
+    description: "黑产内容"
+  - type: output
+    keyword: "如何翻墙"
+    description: "违法违规"
+  - type: output
+    keyword: "客户名单"
+    description: "敏感信息"
+  - type: output
+    keyword: "爆炸物制作"
+    description: "涉暴恐内容"
+  - type: output
+    keyword: "毒品配方"
+    description: "涉毒内容"
+  - type: output
+    keyword: "开票公司"
+    description: "涉税内容"
+  - type: output
+    keyword: "刷单平台"
+    description: "黑灰产"
+  - type: output
+    keyword: "色情图片"
+    description: "涉黄内容"
+  - type: output
+    keyword: "赌博网站"
+    description: "涉赌内容"
+  - type: output
+    keyword: "走私渠道"
+    description: "违法内容"
+  - type: output
+    keyword: "军火交易"
+    description: "涉军火"
+  - type: output
+    keyword: "洗钱方法"
+    description: "金融犯罪"
+  - type: output
+    keyword: "代办证件"
+    description: "黑产服务"
+  - type: output
+    keyword: "网络攻击"
+    description: "网络安全"
+  - type: output
+    keyword: "破解软件"
+    description: "侵权内容"
+  - type: output
+    keyword: "外挂工具"
+    description: "游戏作弊"
+  - type: output
+    keyword: "暗网入口"
+    description: "暗网相关"
+  - type: output
+    keyword: "假币制作"
+    description: "金融犯罪"
+  - type: output
+    keyword: "偷拍教程"
+    description: "隐私侵犯"
+  - type: output
+    keyword: "爆破工具"
+    description: "涉暴恐内容"
+  - type: output
+    keyword: "恐怖组织"
+    description: "涉恐内容"
+  - type: output
+    keyword: "反动言论"
+    description: "涉政内容"
+  - type: output
+    keyword: "集会游行"
+    description: "涉政内容"
+  - type: output
+    keyword: "VPN翻墙"
+    description: "网络安全"
+  - type: output
+    keyword: "银行卡套现"
+    description: "金融犯罪"
+  - type: output
+    keyword: "刷单兼职"
+    description: "黑灰产"
+  - type: output
+    keyword: "开票发票"
+    description: "涉税内容"
+  - type: output
+    keyword: "假证办理"
+    description: "黑产服务"
+  - type: output
+    keyword: "色情视频"
+    description: "涉黄内容"
+  - type: output
+    keyword: "赌博技巧"
+    description: "涉赌内容"
+  - type: output
+    keyword: "走私香烟"
+    description: "违法内容"
+  - type: output
+    keyword: "军火买卖"
+    description: "涉军火"
+  - type: output
+    keyword: "洗钱渠道"
+    description: "金融犯罪"
+  - type: output
+    keyword: "代办护照"
+    description: "黑产服务"
+  - type: output
+    keyword: "网络诈骗"
+    description: "网络安全"
+  - type: output
+    keyword: "破解激活"
+    description: "侵权内容"
+  - type: output
+    keyword: "外挂下载"
+    description: "游戏作弊"
+  - type: output
+    keyword: "暗网交易"
+    description: "暗网相关"
+  - type: output
+    keyword: "假币流通"
+    description: "金融犯罪"
+  - type: output
+    keyword: "偷拍设备"
+    description: "隐私侵犯"
+  - type: output
+    keyword: "爆破教程"
+    description: "涉暴恐内容"
+  - type: output
+    keyword: "恐怖袭击"
+    description: "涉恐内容"
+  - type: output
+    keyword: "反动组织"
+    description: "涉政内容"
+  - type: output
+    keyword: "非法集会"
+    description: "涉政内容"
+  - type: output
+    keyword: "VPN代理"
+    description: "网络安全"
+  - type: output
+    keyword: "银行卡黑市"
+    description: "金融犯罪"
+  - type: output
+    keyword: "刷单黑产"
+    description: "黑灰产"
+  - type: output
+    keyword: "发票代开"
+    description: "涉税内容"
+  - type: output
+    keyword: "假证制作"
+    description: "黑产服务"
+  - type: output
+    keyword: "色情直播"
+    description: "涉黄内容"
+  - type: output
+    keyword: "赌博平台"
+    description: "涉赌内容"
+  - type: output
+    keyword: "走私武器"
+    description: "违法内容"
+  - type: output
+    keyword: "军火黑市"
+    description: "涉军火"
+  - type: output
+    keyword: "洗钱黑产"
+    description: "金融犯罪"
+  - type: output
+    keyword: "代办签证"
+    description: "黑产服务"
+  - type: output
+    keyword: "网络钓鱼"
+    description: "网络安全"
+  - type: output
+    keyword: "破解补丁"
+    description: "侵权内容"
+  - type: output
+    keyword: "外挂脚本"
+    description: "游戏作弊"
+  - type: output
+    keyword: "暗网论坛"
+    description: "暗网相关"
+  - type: output
+    keyword: "假币制造"
+    description: "金融犯罪"
+  - type: output
+    keyword: "偷拍神器"
+    description: "隐私侵犯"
+  - type: output
+    keyword: "爆破方案"
+    description: "涉暴恐内容"
+  - type: output
+    keyword: "恐怖分子"
+    description: "涉恐内容"
+  - type: output
+    keyword: "反动宣传"
+    description: "涉政内容"
+  - type: output
+    keyword: "非法游行"
+    description: "涉政内容"
+  - type: output
+    keyword: "VPN账号"
+    description: "网络安全"
+  - type: output
+    keyword: "银行卡诈骗"
+    description: "金融犯罪"
+  - type: output
+    keyword: "刷单教程"
+    description: "黑灰产"
+  - type: output
+    keyword: "发票作假"
+    description: "涉税内容"
+  - type: output
+    keyword: "假证贩卖"
+    description: "黑产服务"
+  - type: output
+    keyword: "色情聊天室"
+    description: "涉黄内容"
+  - type: output
+    keyword: "赌博软件"
+    description: "涉赌内容"
+  - type: output
+    keyword: "走私毒品"
+    description: "违法内容"
+  - type: output
+    keyword: "军火走私"
+    description: "涉军火"
+  - type: output
+    keyword: "洗钱教程"
+    description: "金融犯罪"
+  - type: output
+    keyword: "代办驾驶证"
+    description: "黑产服务"
+  - type: output
+    keyword: "网络攻击工具"
+    description: "网络安全"
+  - type: output
+    keyword: "破解工具"
+    description: "侵权内容"
+  - type: output
+    keyword: "外挂辅助"
+    description: "游戏作弊"
+  - type: output
+    keyword: "暗网市场"
+    description: "暗网相关"
+  - type: output
+    keyword: "假币教程"
+    description: "金融犯罪"
+  - type: output
+    keyword: "偷拍软件"
+    description: "隐私侵犯"
+  - type: output
+    keyword: "爆破材料"
+    description: "涉暴恐内容"
+  - type: output
+    keyword: "恐怖活动"
+    description: "涉恐内容"
+  - type: output
+    keyword: "反动标语"
+    description: "涉政内容"
+  - type: output
+    keyword: "非法组织"
+    description: "涉政内容"
+  - type: output
+    keyword: "VPN工具"
+    description: "网络安全"
+  - type: output
+    keyword: "银行卡信息"
+    description: "金融犯罪"
+  - type: output
+    keyword: "刷单黑客"
+    description: "黑灰产"
+  - type: output
+    keyword: "发票黑市"
+    description: "涉税内容"
+  - type: output
+    keyword: "假证黑市"
+    description: "黑产服务"
+  - type: output
+    keyword: "色情资源"
+    description: "涉黄内容"
+  - type: output
+    keyword: "赌博教程"
+    description: "涉赌内容"
+  - type: output
+    keyword: "走私车辆"
+    description: "违法内容"
+  - type: output
+    keyword: "军火资源"
+    description: "涉军火"
+  - type: output
+    keyword: "洗钱资源"
+    description: "金融犯罪"
+  - type: output
+    keyword: "代办学历"
+    description: "黑产服务"
+  - type: output
+    keyword: "网络病毒"
+    description: "网络安全"
+  - type: output
+    keyword: "破解账号"
+    description: "侵权内容"
+  - type: output
+    keyword: "外挂资源"
+    description: "游戏作弊"
+  - type: output
+    keyword: "暗网资源"
+    description: "暗网相关"
+  - type: output
+    keyword: "假币资源"
+    description: "金融犯罪"
+  - type: output
+    keyword: "偷拍资源"
+    description: "隐私侵犯"
+
+  # filename 前100条
+  - type: filename
+    keyword: "机密文件"
+    description: "机密文件名"
+  - type: filename
+    keyword: "合同2024"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证照片"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡信息"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "passwords.txt"
+    description: "密码文件"
+  - type: filename
+    keyword: "客户名单.xlsx"
+    description: "客户名单"
+  - type: filename
+    keyword: "财务报表"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利申请"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret.docx"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential.pdf"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资单"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票扫描件"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同副本"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证复印件"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡复印件"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "password_backup"
+    description: "密码备份"
+  - type: filename
+    keyword: "客户信息"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务明细"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利说明书"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret_backup"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential_backup"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资条"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票原件"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同扫描件"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证扫描件"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡扫描件"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "password_list"
+    description: "密码列表"
+  - type: filename
+    keyword: "客户数据"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务数据"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利证书"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret_list"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential_list"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资明细"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票明细"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同明细"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证明细"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡明细"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "passwords_backup"
+    description: "密码备份"
+  - type: filename
+    keyword: "客户备份"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务备份"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利备份"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret_2024"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential_2024"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资备份"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票备份"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同备份"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证备份"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡备份"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "passwords_2024"
+    description: "密码文件"
+  - type: filename
+    keyword: "客户2024"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务2024"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利2024"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret2024"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential2024"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资2024"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票2024"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同2023"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证2023"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡2023"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "passwords_2023"
+    description: "密码文件"
+  - type: filename
+    keyword: "客户2023"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务2023"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利2023"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret2023"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential2023"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资2023"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票2023"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同扫描"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证扫描"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡扫描"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "passwords_scan"
+    description: "密码文件"
+  - type: filename
+    keyword: "客户_scan"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务_scan"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利_scan"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret_scan"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential_scan"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资_scan"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票_scan"
+    description: "发票文件"
+  - type: filename
+    keyword: "合同明细2024"
+    description: "合同文件"
+  - type: filename
+    keyword: "身份证明细2024"
+    description: "身份证文件"
+  - type: filename
+    keyword: "银行卡明细2024"
+    description: "银行卡文件"
+  - type: filename
+    keyword: "passwords明细"
+    description: "密码文件"
+  - type: filename
+    keyword: "客户明细2024"
+    description: "客户信息"
+  - type: filename
+    keyword: "财务明细2024"
+    description: "财务文件"
+  - type: filename
+    keyword: "专利明细2024"
+    description: "专利文件"
+  - type: filename
+    keyword: "secret明细"
+    description: "敏感文件"
+  - type: filename
+    keyword: "confidential明细"
+    description: "机密文件"
+  - type: filename
+    keyword: "工资明细2024"
+    description: "工资文件"
+  - type: filename
+    keyword: "发票明细2024"
+    description: "发票文件"

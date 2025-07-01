@@ -1,0 +1,5 @@
+listen: ":1079" # 代理端口
+model_url: "http://模型ip:port/v1/chat/completions"  # 模型地址
+model_name: "deepseek-r1:1.5b" # 模型名称
+api_key: "" # OpenAI API Key
+rules_file: "./rules.yaml"                                # 规则文件

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>大模型护栏日志大屏</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body { background: #181c2a; color: #fff; }
+        .dashboard-card { background: #232946; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); padding: 24px; margin-bottom: 24px; }
+        .table { color: #fff; background: #232946; }
+        .table th, .table td { border-color: #2d3250; }
+        .btn-primary { background: #3a86ff; border: none; }
+        .btn-primary:hover { background: #265dbe; }
+        .echart-box { height: 320px; margin-bottom: 24px; background: #232946; border-radius: 16px; }
+        .page-link { color: #3a86ff; background: #232946; border: 1px solid #2d3250; }
+        .page-item.active .page-link { background: #3a86ff; border: none; color: #fff; }
+        .form-select, .form-control { background: #232946; color: #fff; border: 1px solid #2d3250; }
+    </style>
+</head>
+<body>
+<div class="container-fluid py-4">
+    <h1 class="mb-4 text-center">大模型护栏拦截日志大屏</h1>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <h5>违规类型分布</h5>
+                <div id="typeChart" class="echart-box"></div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="dashboard-card">
+                <h5>违规趋势（折线+柱状）</h5>
+                <div id="trendChart" class="echart-box"></div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-card mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">拦截日志明细</h5>
+            <div>
+                <input type="file" id="importFile" accept=".json" class="form-control d-inline-block" style="width:200px;">
+                <button class="btn btn-primary ms-2" onclick="importLog()">导入本地日志</button>
+                <button class="btn btn-primary ms-2" onclick="fetchLogs()">刷新</button>
+                <button class="btn btn-primary ms-2" onclick="exportSelected()">导出选中</button>
+                <button class="btn btn-danger ms-2" onclick="deleteSelected()">删除选中</button>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+                <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"> 全选/全不选
+            </div>
+            <div>
+                <label>每页显示</label>
+                <select id="pageSize" class="form-select d-inline-block" style="width:80px;" onchange="changePageSize()">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+                <span class="ms-2">共 <span id="totalCount"></span> 条</span>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="logTable">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>时间</th>
+                    <th>护栏类型</th>
+                    <th>类型</th>
+                    <th>内容</th>
+                    <th>关键词</th>
+                </tr>
+                </thead>
+                <tbody id="logTbody"></tbody>
+            </table>
+        </div>
+        <nav>
+            <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
+    </div>
+</div>
+<script>
+    let logs = [];
+    let selected = new Set();
+    let currentPage = 1;
+    let pageSize = 10;
+
+    function renderTable() {
+        const tbody = document.getElementById('logTbody');
+        tbody.innerHTML = '';
+        const start = (currentPage-1)*pageSize;
+        const end = Math.min(start+pageSize, logs.length);
+        for(let i=start; i<end; i++) {
+            const row = logs[logs.length-1-i]; // 逆序
+            const checked = selected.has(i) ? 'checked' : '';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><input type='checkbox' class='row-check' data-idx='${i}' ${checked}></td><td>${row.time}</td><td>${row.guard_type}</td><td>${row.type}</td><td style='max-width:400px;word-break:break-all;'>${row.content}</td><td>${row.keyword}</td>`;
+            tbody.appendChild(tr);
+        }
+        document.getElementById('totalCount').innerText = logs.length;
+        // 绑定多选事件
+        document.querySelectorAll('.row-check').forEach(cb => {
+            cb.onclick = function() {
+                const idx = parseInt(this.getAttribute('data-idx'));
+                if(this.checked) selected.add(idx); else selected.delete(idx);
+                updateSelectAll();
+            };
+        });
+        updateSelectAll();
+    }
+
+    function renderTypeChart() {
+        const chart = echarts.init(document.getElementById('typeChart'));
+        const typeCount = {};
+        logs.forEach(row => {
+            typeCount[row.guard_type] = (typeCount[row.guard_type] || 0) + 1;
+        });
+        const data = Object.entries(typeCount).map(([name, value]) => ({name, value}));
+        chart.setOption({
+            backgroundColor: '#232946',
+            tooltip: {trigger: 'item'},
+            series: [{
+                type: 'pie',
+                radius: ['40%', '70%'],
+                data,
+                label: {color: '#fff'},
+            }]
+        });
+    }
+
+    function renderTrendChart() {
+        const chart = echarts.init(document.getElementById('trendChart'));
+        const dayCount = {};
+        logs.forEach(row => {
+            const day = row.time.split(' ')[0];
+            dayCount[day] = (dayCount[day] || 0) + 1;
+        });
+        const days = Object.keys(dayCount).sort();
+        const values = days.map(d => dayCount[d]);
+        chart.setOption({
+            backgroundColor: '#232946',
+            tooltip: {trigger: 'axis'},
+            xAxis: {type: 'category', data: days, axisLabel: {color: '#fff'}},
+            yAxis: {type: 'value', axisLabel: {color: '#fff'}},
+            series: [
+                {type: 'line', data: values, smooth: true, areaStyle: {}},
+                {type: 'bar', data: values, barWidth: 20, itemStyle: {color: '#3a86ff'}}
+            ]
+        });
+    }
+
+    function renderPagination() {
+        const total = logs.length;
+        const pageCount = Math.ceil(total/pageSize);
+        const ul = document.getElementById('pagination');
+        ul.innerHTML = '';
+        for(let i=1; i<=pageCount; i++) {
+            const li = document.createElement('li');
+            li.className = 'page-item'+(i===currentPage?' active':'');
+            li.innerHTML = `<a class='page-link' href='#'>${i}</a>`;
+            li.onclick = function(e){e.preventDefault();currentPage=i;renderAll();};
+            ul.appendChild(li);
+        }
+    }
+
+    function renderAll() {
+        renderTable();
+        renderTypeChart();
+        renderTrendChart();
+        renderPagination();
+    }
+
+    function fetchLogs() {
+        fetch('/api/logs').then(r => r.json()).then(data => {
+            logs = data;
+            selected.clear();
+            currentPage = 1;
+            renderAll();
+        });
+    }
+
+    function importLog() {
+        const file = document.getElementById('importFile').files[0];
+        if (!file) return alert('请选择日志文件');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const lines = e.target.result.trim().split(/\\r?\\n/);
+                logs = lines.map(line => JSON.parse(line));
+                selected.clear();
+                currentPage = 1;
+                renderAll();
+            } catch (err) {
+                alert('日志文件格式错误');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function exportSelected() {
+        if(selected.size===0) return alert('请先选择要导出的日志');
+        const arr = Array.from(selected).map(idx => logs[logs.length-1-idx]);
+        const content = arr.map(row => JSON.stringify(row)).join('\n');
+        const blob = new Blob([content], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'selected_logs_'+Date.now()+'.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function deleteSelected() {
+        if(selected.size===0) return alert('请先选择要删除的日志');
+        if(!confirm('确定要删除选中的日志吗？')) return;
+        const arr = Array.from(selected).map(idx => logs[logs.length-1-idx]);
+        fetch('/api/delete_logs', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(arr)
+        }).then(() => {
+            fetchLogs();
+        });
+    }
+
+    function toggleSelectAll(cb) {
+        const start = (currentPage-1)*pageSize;
+        const end = Math.min(start+pageSize, logs.length);
+        if(cb.checked) {
+            for(let i=start; i<end; i++) selected.add(i);
+        } else {
+            for(let i=start; i<end; i++) selected.delete(i);
+        }
+        renderTable();
+    }
+
+    function updateSelectAll() {
+        const start = (currentPage-1)*pageSize;
+        const end = Math.min(start+pageSize, logs.length);
+        let allChecked = true;
+        for(let i=start; i<end; i++) {
+            if(!selected.has(i)) { allChecked = false; break; }
+        }
+        document.getElementById('selectAll').checked = allChecked;
+    }
+
+    function changePageSize() {
+        pageSize = parseInt(document.getElementById('pageSize').value);
+        currentPage = 1;
+        renderAll();
+    }
+
+    // 页面加载自动拉取
+    fetchLogs();
+</script>
+</body>
+</html>
