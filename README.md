@@ -84,24 +84,61 @@ go mod tidy
 
 - 编辑 `config/config.yaml`、`config/rules.yaml`
 
+  ![image-20250701163919618](/assert/image-20250701163919618.png)
+
+  ![image-20250701163950284](/assert/image-20250701163950284.png)
+
+  
+
 3. 启动服务
 
 ```bash
 go run cmd/main.go
 ```
 
+![image-20250701164037368](/assert/image-20250701164037368.png)
+
+
+
 4. 访问 Web 日志大屏
 
 - http://127.0.0.1:8888/index.html
+
+  ![image-20250701164146473](/assert/image-20250701164146473.png)
+
+  
 
 ---
 
 ## 接口说明
 
 - **/v1/chat/completions**：OpenAI 兼容多模态代理
+
+  ![image-20250701164215894](/assert/image-20250701164215894.png)
+
+  ![image-20250701164230296](/assert/image-20250701164230296.png)
+
+  
+
 - **/v1/upload**：文件上传检测接口，检测通过后封装标准的openai数据结构发送至本地模型
+
+  ![image-20250701164358804](/assert/image-20250701164358804.png)
+
+  
+
 - **/api/logs**：获取全部拦截日志（JSON）
+
+  ![image-20250701164421309](/assert/image-20250701164421309.png)
+
+  ![image-20250701164456792](/assert/image-20250701164456792.png)
+
+  
+
 - **/api/delete_logs**：批量删除日志
+
+  ![image-20250701164721916](/assert/image-20250701164721916.png)
+
+  
 
 ---
 
