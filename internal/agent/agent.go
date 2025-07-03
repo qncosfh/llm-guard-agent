@@ -132,12 +132,22 @@ func ProxyHandler(modelURL string) http.HandlerFunc {
 				} `json:"message"`
 			} `json:"choices"`
 		}
-		_ = json.Unmarshal(outputBytes, &respObj)
+		raw := string(outputBytes)
+		if strings.HasPrefix(raw, "data:") {
+			raw = strings.TrimPrefix(raw, "data:")
+			raw = strings.TrimSpace(raw)
+		}
+		err = json.Unmarshal([]byte(raw), &respObj) // 这里要用 []byte(raw)
+		if err != nil {
+			log.Printf("[ERROR] Unmarshal outputBytes: %v", err)
+		}
 		var outputText string
 		for _, c := range respObj.Choices {
 			outputText += c.Message.Content
 		}
+
 		keywords, descs := rules.MatchAllSlidingWindow(outputText, "output", 5, 1)
+
 		if len(keywords) > 0 {
 			addLog("output", outputText, strings.Join(keywords, ", "), strings.Join(descs, ", "))
 			log.Printf("[拦截][输出] 内容:%s 关键词:%s", outputText, strings.Join(keywords, ", "))
