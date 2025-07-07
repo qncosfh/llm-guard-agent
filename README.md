@@ -1,237 +1,252 @@
-# LLM Guard Agent
+# llm-guard-agent 离线部署与使用手册
 
-大模型护栏（LLM Guard Agent）是一个用于大语言模型（如 OpenAI、DeepSeek 等）API 接口的内容安全代理，支持多模态输入（文本、图片、文件），可灵活配置敏感词规则，具备现代化日志大屏和二次开发友好性。
+## 目录
 
-:high_brightness:<mark>这里只是给了一个思路。</mark>
-
----
-
-## 设计理念
-
-- **安全合规**：拦截和过滤用户输入、模型输出、文件上传等多种内容，防止敏感信息泄露或违规内容生成。
-- **多模态支持**：支持文本、~~图片（OCR）~~、文档（PDF、TXT、MD、~~DOCX~~）等多种输入类型。
-- **高可扩展性**：规则可通过 YAML~~/JSON/数据库~~灵活配置，易于二次开发和集成。
-- **现代化运维**：内置大屏风格 Web 日志分析页面，支持日志导入、导出、删除、分页、统计等。
-
----
-
-## 主要功能
-
-- **OpenAI/DeepSeek API 兼容代理**：/v1/chat/completions 代理，支持多模态消息体。
-- **文件上传检测**：/v1/upload 支持文件名和内容检测，自动转发到大模型。
-- **敏感词规则系统**：支持关键词、正则表达式，规则热加载。
-- **日志持久化与分析**：JSON 日志文件，支持 Web 大屏分析、导入导出、批量删除。
-- **现代化前端**：ECharts+Bootstrap 大屏，支持多选、分页、趋势分析、类型分布等。
+- [项目简介](#项目简介)
+- [功能特性](#功能特性)
+- [目录结构](#目录结构)
+- [环境准备](#环境准备)
+- [依赖离线安装](#依赖离线安装)
+- [数据生成与模型训练](#数据生成与模型训练)
+- [ONNX推理服务部署](#onnx推理服务部署)
+- [Go代理服务部署](#go代理服务部署)
+- [配置文件说明](#配置文件说明)
+- [常见问题与排查](#常见问题与排查)
 
 ---
 
-## 代码结构
+## 项目简介
+
+`llm-guard-agent` 是一个支持多平台（如 Dify、openwebui、n8n 等）的 LLM 内容安全代理，具备 ONNX 推理规则模型、YAML规则兜底、详细日志、灵活配置等特性，适合企业/内网环境离线部署。
+
+## 功能特性
+
+- 输入/输出/文件名多模态内容安全拦截，支持自定义拦截提示
+- ONNX多标签文本分类模型推理，YAML规则兜底
+- Dify/openwebui/n8n等平台兼容，支持流式SSE
+- 日志记录、主机名、IP、拦截类型等全量追踪
+- 支持大规模数据增强与自定义训练
+- 全流程离线部署，无需外网
+
+## 目录结构
 
 ```
 llm-guard-agent/
-├── cmd/                # 启动入口 main.go
-├── config/             # 配置文件（config.yaml、rules.yaml）
-├── internal/
-│   ├── agent/          # 主要业务逻辑（代理、上传、日志、API）
-│   ├── config/         # 配置加载
-│   ├── multimodal/     # 多模态内容解析（OCR、文件解析）
-│   ├── rules/          # 规则系统（关键词、正则、描述）
-│   └── web/templates/  # 前端页面（index.html）
-├── logs/               # JSON 日志文件
-├── go.mod/go.sum       # Go 依赖
+├── config/                				# 配置文件目录
+│   └── config.yaml       			  # 主配置文件
+|   └── rules.yaml         				# 用户自行添加的兜底规则(具有行业针对性的违规词等)
+├── database/              				# 数据与Python服务
+│   ├── data.py            				# 训练数据生成脚本
+│   ├── pythroch.py        				# PyTorch训练与ONNX导出
+│   ├── content_guard_service.py 	# ONNX推理服务
+│   ├── content_guard.onnx 				# 导出的ONNX模型
+│   ├── labels.txt         				# 标签顺序文件
+│   └── train_data.csv     				# 训练数据
+├── internal/              				# Go后端核心代码
+├── cmd/                   				# Go主程序入口
+├── logs/                  				# 日志目录
+├── README.md              				# 使用手册
+└── ...
 ```
 
+## 环境准备
+
+### Python
+
+- 推荐 Python 3.9/3.10/3.11（>=3.8，建议用Miniconda/Anaconda）
+- 需提前准备 transformers、torch、onnxruntime、fastapi、uvicorn、scikit-learn、pandas 等依赖
+
+### Go
+
+- 推荐 Go 1.18 及以上
+
+### 离线依赖包准备
+
+1. 在有网机器上：
+
+   ```bash
+   pip download -d offline_pkgs torch transformers onnxruntime fastapi uvicorn scikit-learn pandas
+   ```
+
+2. 拷贝 `offline_pkgs/` 到服务器，安装：
+
+   ```bash
+   pip install --no-index --find-links=offline_pkgs torch transformers onnxruntime fastapi uvicorn scikit-learn pandas
+   ```
+
+## 数据生成与模型训练
+
+1. 生成训练数据和标签顺序：
+
+   ```bash
+   cd database
+   python3 data.py
+   # 生成 train_data.csv 和 labels.txt
+   ```
+
+2. 训练并导出ONNX模型：
+
+   ```bash
+   python3 pythroch.py
+   # 生成 content_guard.onnx
+   ```
+
+## ONNX推理服务部署
+
+1. 启动服务：
+
+   ```bash
+   cd database
+   uvicorn content_guard_service:app --host 0.0.0.0 --port 8081
+   ```
+
+2. config.yaml 关键配置：
+
+   ```yaml
+   onnx_url: "http://127.0.0.1:8081/predict"
+   ```
+
+3. 服务接口：
+
+   - POST `/predict`，参数：`{"text": "待检测文本"}`
+   - 返回：`{"blocked": true/false, "labels": [...], "probs": [...]}`
+
+## Go代理服务部署
+
+1. 配置 config.yaml：
+
+   ```yaml
+   model_url: "http://你的大模型服务/v1/chat/completions"
+   ...
+   ```
+
+2. 编译并启动 Go 服务：
+
+   ```bash
+   cd cmd
+   go build -o llm-guard-agent main.go
+   ./llm-guard-agent
+   ```
+
+3. 日志、拦截、平台适配等详见 config.yaml 说明
+
+## 配置文件说明（config/config.yaml）
+
+| 字段            | 说明                             |
+| --------------- | -------------------------------- |
+| Listen          | Go代理监听端口                   |
+| WebListen       | 日志大屏web端口                  |
+| onnx_url        | Python ONNX推理服务HTTP地址      |
+| onnx_model_path | ONNX模型文件路径（Python服务用） |
+| bert_model_name | BERT分词器/模型本地路径          |
+| model_url       | 大模型API地址                    |
+| model_name      | 大模型名称                       |
+| api_key         | OpenAI API Key（如需）           |
+| rules_file      | YAML规则文件路径                 |
+| platform        | 适配平台（dify/openwebui/n8n等） |
+
+部署+使用效果
+
 ---
 
-## 二次开发建议
+## 部署与使用效果
 
-1. **扩展规则系统**
+### 1. 一站式部署流程
 
-- 支持更多规则类型（如 IP、用户ID、上下文等）。
-- 支持规则热加载、数据库存储。
+- **Python ONNX推理服务**：
 
-2. **多模态能力增强**
+  ```bash
+  cd database
+  uvicorn content_guard_service:app --host 0.0.0.0 --port 8081
+  # 服务启动后，Go端即可通过 onnx_url 调用
+  ```
 
-- 集成更强的 OCR、音频转文本、图片内容识别等。
-- 支持更多文件格式。
+  ![Snipaste_2025-07-07_14-50-50](/assert/Snipaste_2025-07-07_14-50-50.png)
 
-3. **API 扩展**
-
-- 增加更多管理接口（如规则管理、日志检索、批量导入导出等）。
-- 支持多模型路由、负载均衡。
-
-4. **前端大屏扩展**
-
-- 增加多天日志分析、更多可视化图表、权限管理等。
-- 支持自定义看板、告警推送。
-
-5. **高可用与安全**
-
-- 支持 HTTPS、认证、限流、审计等。
-- 支持分布式部署。
-
----
-
-## 快速启动
-
-1. 安装依赖
-
-```bash
-go mod tidy
-```
-
-2. 配置规则和参数
-
-- 编辑 `config/config.yaml`、`config/rules.yaml`
-
-  ![image-20250701163919618](/assert/image-20250701163919618.png)
-
-  ![image-20250701163950284](/assert/image-20250701163950284.png)
+  ![Snipaste_2025-07-07_14-51-45](./assert/Snipaste_2025-07-07_14-51-45.png)
 
   
 
-3. 启动服务
+- **Go代理服务**：
 
-```bash
-go run cmd/main.go
-```
+  ```bash
+  cd cmd
+  go build -o llm-guard-agent main.go
+  ./llm-guard-agent
+  # 日志、拦截、平台适配等详见 config.yaml
+  ```
 
-![image-20250701164037368](/assert/image-20250701164037368.png)
+![Snipaste_2025-07-07_14-52-53](./assert/Snipaste_2025-07-07_14-52-53.png)
 
+![Snipaste_2025-07-07_14-53-59](./assert/Snipaste_2025-07-07_14-53-59.png)
 
+### 2. 拦截与放行效果
 
-4. 访问 Web 日志大屏
+- **敏感内容拦截**：
+  - 输入/输出/文件名命中敏感内容时，返回自定义警告提示，支持 Dify/openwebui 等平台格式。
+  - 日志自动记录拦截类型、内容、主机名、IP。
+  - 支持流式SSE拦截提示，Dify前端可直接展示。
 
-- http://127.0.0.1:8888/index.html
+- **正常内容放行**：
+  - 未命中敏感内容时，自动转发到大模型API，返回原始模型回复。
 
-  ![image-20250701164146473](/assert/image-20250701164146473.png)
+### 3. API调用示例
 
-  
+- **POST /predict**（Python服务）
 
----
+  ```json
+  { "text": "法轮功是什么" }
+  # 返回：{"blocked": true, "labels": ["politics"], "probs": [...]}
+  ```
 
-## 接口说明
-
-- **/v1/chat/completions**：OpenAI 兼容多模态代理
-
-  ![image-20250701164215894](/assert/image-20250701164215894.png)
-
-  ![image-20250701164230296](/assert/image-20250701164230296.png)
-  ![image-20250701164230296](/assert/WechatIMG8057.jpg)
-
-  
-
-- **/v1/upload**：文件上传检测接口，检测通过后封装标准的openai数据结构发送至本地模型
-
-  ![image-20250701164358804](/assert/image-20250701164358804.png)
-
-  
-
-- **/api/logs**：获取全部拦截日志（JSON）
-
-  ![image-20250701164421309](/assert/image-20250701164421309.png)
-
-  ![image-20250701164456792](/assert/image-20250701164456792.png)
+  ![Snipaste_2025-07-07_15-14-20](./assert/Snipaste_2025-07-07_15-14-20.png)
 
   
 
-- **/api/delete_logs**：批量删除日志
+- **/v1/chat/completions**（Go代理）
 
-  ![image-20250701164721916](/assert/image-20250701164721916.png)
+  - 支持 OpenAI/Dify/openwebui 标准格式，拦截时返回：
+
+    ```json
+    {
+      "id": "chatcmpl-guarded",
+      "object": "chat.completion",
+      "choices": [{
+        "message": {"role": "assistant", "content": "⚠️[此消息为llm-guard回复]..."},
+        ...
+      }],
+      "text": "⚠️[此消息为llm-guard回复]..."
+    }
+    ```
+
+### 4. 日志与大屏效果
+
+- 日志自动写入 logs/ 目录，支持 Web 大屏实时查看、检索、批量删除。
+
+- 前端大屏支持多维度分析、趋势图、类型分布等。
+
+  ![Snipaste_2025-07-07_14-56-03](./assert/Snipaste_2025-07-07_14-56-03.png)
 
   
 
----
+### 5. 常见用法
 
-
-
-# LLM Guard Agent 后端实现逻辑说明
-
----
-
-## 1. 主要流程
-
-### 1.1 启动流程
-
-1. 加载配置文件（config.yaml），包括监听端口、模型地址、API Key、规则文件路径等。
-2. 加载敏感词规则（rules.yaml），支持关键词、正则、描述等。
-3. 加载历史 JSON 日志文件到内存。
-4. 注册 API 路由，包括：
-   - `/v1/chat/completions`：OpenAI 兼容代理
-   - `/v1/upload`：文件上传检测
-   - `/api/logs`：日志查询
-   - `/api/delete_logs`：日志删除
-   - 静态文件服务（前端页面、大屏）
-
-### 1.2 用户请求拦截与检测
-
-- **文本输入检测**：
-  1. 用户通过 `/v1/chat/completions` 提交消息。
-  2. 后端对每条 user 消息内容进行敏感词检测（滑动窗口，支持多关键词、正则）。
-  3. 命中规则则拦截，记录日志并返回标准错误响应。
-  4. 未命中则转发到大模型 API，返回模型响应。
-  5. 对模型输出内容再次检测，命中则拦截并记录。
-
-- **文件上传检测**：
-  1. 用户通过 `/v1/upload` 上传文件。
-  2. 检查文件名是否违规。
-  3. 提取文件内容（支持文本、图片 OCR、音频 ASR、文档解析等）。
-  4. 对提取出的文本内容进行敏感词检测。
-  5. 命中规则则拦截，记录日志并返回错误。
-  6. 检测通过则自动组装 OpenAI 标准消息体，POST 到本地大模型 `/v1/chat/completions`，返回模型响应。
+- **自定义拦截提示**：可在代码或配置中自定义警告内容。
+- **多平台适配**：通过 platform 字段切换 Dify/openwebui/n8n 等兼容逻辑。
+- **规则热更新**：修改 rules.yaml 后重启服务即可生效。
 
 ---
 
-## 2. 关键模块说明
+## 常见问题与排查
 
-### 2.1 agent.go
-
-- 主要业务逻辑，包括 API 路由、代理、上传、日志、规则检测等。
-- 日志采用 JSON 文件持久化，支持内存与文件同步。
-- 敏感词检测采用滑动窗口算法，支持多关键词、正则表达式。
-- 文件上传自动识别类型，调用 multimodal 进行内容提取。
-
-### 2.2 rules.go
-
-- 规则系统，支持关键词、正则、描述。
-- 支持 YAML 配置，便于扩展和热加载。
-- 提供 Match、MatchAllSlidingWindow 等检测方法。
-
-### 2.3 multimodal/
-
-- 多模态内容解析，包括图片 OCR、音频转文本、文档解析等。
-- 可扩展对更多文件类型和识别方式的支持。
-
-### 2.4 config.go
-
-- 配置加载，支持监听端口、模型地址、API Key、规则文件路径等。
-
-### 2.5 日志系统
-
-- 日志以 JSON 行格式写入 logs/guard_log_日期.json。
-- 支持 Web API 查询、批量删除、导入导出。
-- 前端大屏通过 /api/logs 获取数据，支持多选、分页、趋势分析等。
+- **Python服务被Killed**：内存不足，减小N、减少增强、分批写入。
+- **transformers离线加载失败**：本地目录下需有 vocab.txt、config.json、tokenizer_config.json、special_tokens_map.json 等文件。
+- **Go端无法访问Python服务**：检查 onnx_url 配置、端口防火墙、服务是否启动。
+- **大模型API异常**：检查 model_url、api_key、目标服务可用性。
+- **YAML规则未生效**：检查 rules_file 路径、文件内容格式。
+- **平台兼容问题**：platform 字段需与实际前端平台匹配。
 
 ---
 
-## 3. 典型接口调用流程
-
-- **文本代理**：
-  - 用户 → `/v1/chat/completions` → [输入检测] → [大模型] → [输出检测] → 用户
-- **文件上传**：
-  - 用户 → `/v1/upload` → [文件名/内容检测] → [组装消息体] → `/v1/chat/completions` → 用户
-- **日志管理**：
-  - 前端 → `/api/logs` 获取全部日志
-  - 前端 → `/api/delete_logs` 批量删除日志
-
----
-
-## 4. 二次开发建议
-
-- 可扩展更多规则类型、检测算法、文件格式。
-- 可对接更多大模型 API、支持多模型路由。
-- 可扩展前端大屏，支持多天日志、更多可视化、权限管理等。
-- 支持分布式部署、认证、限流、审计等企业级能力。
-
----
+如有更多问题，欢迎提issue或联系开发者！
 
