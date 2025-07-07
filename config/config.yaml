@@ -1,5 +1,9 @@
-listen: ":1079" # 代理端口
-model_url: "http://模型ip:port/v1/chat/completions"  # 模型地址
+Listen: ":1079" # 代理端口
+WebListen: ":8888" #日志大屏web端口
+onnx_url: "http://1.1.1.1:8081/predict"  # onnx地址 uvicorn content_guard_service:app --host 0.0.0.0 --port 8888
+model_url: "http://172.20.0.250:11434/v1/chat/completions"  # 模型地址
 model_name: "deepseek-r1:1.5b" # 模型名称
 api_key: "" # OpenAI API Key
 rules_file: "./rules.yaml"                                # 规则文件
+platform: "dify" # 支持 dify/openwebui/n8n 等平台适配
+
